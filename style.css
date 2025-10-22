@@ -1,0 +1,224 @@
+body {
+    font-size: 14px;
+    font-family: sans-serif;
+    background-color: #555;
+    /*background-image: */
+    background-attachment: fixed;
+}
+
+
+//<img src="https://n.ethz.ch/~kiten/portrait.jpg" alt="Usually there is a picture here" style="padding-left: 18px; padding-bottom: 10px;" align="right"; width="30%">
+img {
+  border-radius: 50%;
+}
+
+h1, h2, h3 {
+    font-weight: bold;    
+    margin: 0px;
+    padding: 0px;   
+}
+
+h1 {
+    font-size: 250%;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 20px 0px;
+    border-radius: 7px;
+    background-color: #223355;
+}
+
+h2 {  
+    font-size: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 150%;
+    margin-bottom: 20px;
+}
+
+dt {
+    font-weight: bold;
+}
+
+p {
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+em {
+    font-style: italic;
+    font-weight: normal;
+}
+
+strong {
+    font-style: normal;
+    font-weight: bold;
+}
+
+
+a:link, a:link {
+    color: #000000;
+}
+
+a:link, a:visited {
+    text-decoration: none;
+    color: #106BCD  ;
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+    color: #FFC125;
+}
+
+dd {
+    margin-bottom: 10px;
+}
+
+img {
+    vertical-align: top;
+    padding: 0px;
+    border-width: 0px;
+}
+
+.item {
+    /*font-size: 13px;*/
+    /*border-width: 0px;
+    background-color: white;*/
+    margin-bottom: 10px;
+}
+
+.frame {
+    padding: 20px;
+    margin: 0px 0px 20px 0px;
+    color: #222;
+    background-color: #FFFFFF;
+    border-radius: 7px;
+    border-color:black;   
+}
+
+.pubtitle {
+    font-weight: bold;
+}
+
+#col {
+    max-width: 700px;
+	min-width: 300px;
+    margin: 0px auto;
+    padding: 0px;
+}
+
+#menu {
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 120%;
+    background-color: #223355;
+    border-radius: 7px 7px 0px 0px;
+}
+
+#menu li {
+    float: left;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+#menu li a {
+    display: block;
+    margin: 0px;
+    padding: 8px 10px 8px 20px;
+}
+
+#menu a:link, #menu a:visited {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+#menu a:hover {
+    text-decoration: none;
+    color: #FFFFFF ;
+}
+
+#main {
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 7px 7px;
+}
+
+#photo_id {
+    float: right;
+    border-width: 0px;
+    border-radius: 7px;
+    margin: 0px 0px 40px 40px;
+    padding: 0px;
+    
+}
+
+div.b {
+  line-height: 1.5;
+}
+
+/** MENU */
+
+#menu {
+    height: 33px;
+    margin: 0px auto;
+    background-color: #223355;
+}
+
+#menu ul {
+    margin: -2px;
+    padding: 0px;
+    list-style: none;
+}
+
+#menu li {
+    display: inline;
+}
+
+#menu a {
+    display: block;
+    float: left;
+    padding: 10px;
+    padding-left:20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: smaller;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+#menu a:hover {
+    color: #FFC125;
+}
+
+table {
+  font-family: sans-serif;
+  border-collapse: collapse;
+  align: center
+  width: 100%;
+}
+
+table.center {
+    width:100%; 
+    margin-left:0%; 
+    margin-right:0%;
+  }
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #CCC;
+}
+
+tr:nth-child(odd) {
+  background-color: #FFF;
+}
+
