@@ -222,3 +222,8 @@ tr:nth-child(odd) {
   background-color: #FFF;
 }
 
+/* Remove top margin for the first element inside main content boxes */
+#main .b > *:first-child {
+  margin-top: 0;
+}
+	
