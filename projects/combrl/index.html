@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="../../style.css">
     <title>COMBRL Project - Klemens Iten</title>
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 </head>
 
 <body>
@@ -20,13 +22,251 @@
         </div>
 
         <div id="main" class="frame">
+
             <div class="b">
-                <h2>Coming soon</h2>
+                <h2>Sample-efficient and Scalable Exploration in Continuous-Time RL</h2>
                 <p>
-                    The COMBRL project page is under construction.
-                    In the mean time, <a href="https://github.com/lasgroup/ombrl" target="_blank" rel="noopener noreferrer">view this project on GitHub</a>.
+                    COMBRL is a continuous-time model-based reinforcement learning algorithm for efficient exploration under unknown nonlinear dynamics.
+                    It combines task reward maximization with epistemic uncertainty-driven exploration in a simple optimistic objective,
+                    yielding a scalable approach that supports both reward-driven and unsupervised settings.
+                </p>
+                <p>
+                    <strong>Authors:</strong> 
+                    <a href="https://kiten.me" target="_blank">Klemens Iten</a>, 
+                    <a href="https://lenarttreven.github.io/" target="_blank">Lenart Treven</a>, 
+                    <a href="https://sukhijab.github.io/" target="_blank">Bhavya Sukhija</a>, 
+                    <a href="https://dorfler.ethz.ch/" target="_blank">Florian Dörfler</a>, 
+                    <a href="https://las.inf.ethz.ch/krausea" target="_blank">Andreas Krause</a>
+                    <br>
+                    <strong>Venue:</strong> 
+                    <a href="https://iclr.cc" target="_blank">ICLR 2026</a>
+                </p>
+                <p>
+                    <a href="https://arxiv.org/abs/2510.24482" target="_blank" rel="noopener noreferrer">📄 Paper</a>
+                    &nbsp;|&nbsp;
+                    <a href="https://github.com/lasgroup/ombrl/" target="_blank" rel="noopener noreferrer">💻 Code</a>
+                    &nbsp;|&nbsp;
+                    <a href="https://iclr.cc/virtual/2026/poster/10009694" target="_blank" rel="noopener noreferrer">🗣 Conference Virtual Page</a>
+                    &nbsp;|&nbsp;
+                    <a href="./poster.png" target="_blank" rel="noopener noreferrer">🪧 Poster</a>
+
+                </p>
+                </div>
+
+            <div class="b">
+                <h2>Overview</h2>
+                <p>
+                    Most reinforcement learning methods are designed for discrete-time dynamics, even though many real-world control systems are naturally continuous in time.
+                    In this work, we study continuous-time reinforcement learning, where the unknown system dynamics are modeled by nonlinear ordinary differential equations.
+                    We consider systems of the form
+                </p>
+                <p>
+                    \[
+                    \dot{\mathbf{x}}(t) = \mathbf{f}^*(\mathbf{x}(t), \mathbf{u}(t)),
+                    \qquad
+                    \mathbf{u}(t) = \pi(\mathbf{x}(t)),
+                    \]
+                </p>
+                <p>
+                    with task objective
+                </p>
+                <p>
+                    \[
+                    J(\pi, \mathbf{f}^*) = \int_0^T r\big(\mathbf{x}_t, \pi(\mathbf{x}_t)\big)\,dt.
+                    \]
+                </p>
+                <p>
+                    The goal is to learn a policy that both solves the task and collects informative data for learning an accurate dynamics model.
                 </p>
             </div>
+
+            <div class="b">
+                <h2>Method</h2>
+
+                <p>
+                    <strong>Continuous-time RL.</strong>
+                    We consider control systems that evolve continuously according to
+                    \(\dot{\mathbf{x}}(t) = \mathbf{f}^*(\mathbf{x}(t), \mathbf{u}(t))\),
+                    where a policy \(\pi\) specifies the control input \(\mathbf{u}(t) = \pi(\mathbf{x}(t))\).
+                    This formulation naturally captures physical systems such as robots or dynamical processes.
+                </p>
+
+                <p>
+                    <strong>Model-based RL loop.</strong>
+                    COMBRL follows a model-based loop:
+                </p>
+                <ul>
+                    <li>fit an uncertainty-aware dynamics model \((\boldsymbol{\mu}_n, \boldsymbol{\sigma}_n)\) from data,</li>
+                    <li>plan a policy \(\pi_n\) using the model,</li>
+                    <li>execute \(\pi_n\) to collect a trajectory \(\tau_n\),</li>
+                    <li>update the model with new (noisy, irregularly sampled) measurements.</li>
+                </ul>
+
+                <p>
+                    A key challenge in continuous time is that data is collected along trajectories at irregular time points,
+                    making both learning and exploration more difficult.
+                </p>
+
+                <p>
+                    <strong>Optimistic exploration.</strong>
+                    A principled strategy is to act optimistically: choose a policy that performs well under the most favorable dynamics consistent with the data.
+                    This leads to the idealized objective
+                </p>
+
+                <p>
+                    \[
+                    \max_{\pi} \; \max_{\mathbf{f} \in \mathcal{M}_n} \; J(\pi, \mathbf{f}),
+                    \]
+                </p>
+
+                <p>
+                    where \(\mathcal{M}_n\) is the set of plausible dynamics models.
+                    However, this co-optimization over both policies and dynamics is computationally intractable in practice.
+                </p>
+
+                <p>
+                    <strong>COMBRL.</strong>
+                    Instead, COMBRL plans with respect to the mean model \(\boldsymbol{\mu}_n\)
+                    and adds an exploration bonus based on the epistemic uncertainty of the dynamics model \(\boldsymbol{\sigma}_n\),
+                    yielding a simple scalar objective that approximates optimistic exploration.
+                </p>
+
+                <p>
+                    In episode \(n\), COMBRL plans under
+                </p>
+                <p>
+                    \[
+                    \dot{\mathbf{x}}'(t) = \boldsymbol{\mu}_n\big(\mathbf{x}'(t), \mathbf{u}(t)\big)
+                    \]
+                </p>
+
+                <p>
+                    and computes a policy via
+                </p>
+
+                <p>
+                    \[
+                    \pi_n
+                    =
+                    \arg\max_{\pi \in \Pi}
+                    \int_0^T
+                    r(\mathbf{x}'_t, \mathbf{u}_t)
+                    +
+                    \lambda_n \, \|\boldsymbol{\sigma}_{n-1}(\mathbf{x}'_t, \mathbf{u}_t)\|
+                    \, dt.
+                    \]
+                </p>
+
+                <p>
+                    Here, \(\lambda_n\) controls the exploration–exploitation trade-off, yielding:
+                </p>
+
+                <ul>
+                    <li>\(\lambda_n = 0\): reward-only (greedy),</li>
+                    <li>\(0 < \lambda_n < \infty\): task-driven exploration,</li>
+                    <li>\(\lambda_n \to \infty\): unsupervised exploration.</li>
+                </ul>
+            </div>
+
+            <div class="b">
+                <h2>Main Results</h2>
+
+                <p>
+                    On the theory side, we show sublinear regret in the reward-driven setting and provide a sample complexity guarantee in the unsupervised setting.
+                </p>
+
+                <p>
+                    Empirically, COMBRL:
+                </p>
+                <ul>
+                    <li>scales better than prior continuous-time exploration methods,</li>
+                    <li>is more sample-efficient across several deep RL tasks,</li>
+                    <li>handles sparse-reward and underactuated tasks robustly,</li>
+                    <li>generalizes well to previously unseen downstream tasks, especially in the unsupervised setting,</li>
+                    <li>and enables efficient time-adaptive control with fewer interactions.</li>
+                </ul>
+
+                <p>
+                    <strong>Scalability and robustness.</strong>
+                    COMBRL scales better than prior methods and performs strongly even in sparse-reward and underactuated settings.
+                </p>
+
+                <div style="text-align:center; margin: 1.5em 0;">
+                    <img src="./gps_iclr.png"
+                        alt="COMBRL scaling and robustness results"
+                        style="max-width: 100%; height: auto;">
+                </div>
+
+                <p>
+                    <strong>Deep RL benchmarks.</strong>
+                    Across several deep RL tasks, COMBRL achieves strong sample efficiency and outperforms prior baselines.
+                </p>
+
+                <div style="text-align:center; margin: 1.5em 0;">
+                    <img src="./maxinfo_iclr.png"
+                        alt="COMBRL performance across deep RL tasks"
+                        style="max-width: 100%; height: auto;">
+                </div>
+
+                <p>
+                    <strong>Generalization.</strong>
+                    In the unsupervised setting, COMBRL learns exploratory behaviors that transfer well to previously unseen downstream tasks.
+                </p>
+
+                <div style="text-align:center; margin: 1.5em 0;">
+                    <img src="./downstream_def_3.png"
+                        alt="COMBRL generalization to downstream tasks"
+                        style="max-width: 100%; height: auto;">
+                </div>
+
+                <p>
+                    <strong>Time-adaptive control.</strong>
+                    COMBRL also enables efficient time-adaptive control and achieves strong performance with fewer interactions.
+                </p>
+
+                <div style="text-align:center; margin: 1.5em 0;">
+                    <img src="./tacos_iclr.png"
+                        alt="COMBRL time-adaptive control results"
+                        style="max-width: 100%; height: auto;">
+                </div>
+            </div>
+
+            <div class="b">
+                <h2>Why COMBRL?</h2>
+                <p>
+                    COMBRL is designed to make optimistic exploration in continuous-time RL practical.
+                    It combines a simple planning objective with uncertainty-aware dynamics models such as Gaussian processes, Bayesian neural networks, or probabilistic ensembles.
+                    This makes it both theoretically grounded and scalable to challenging control problems.
+                </p>
+            </div>
+
+            <div class="b">
+                <h2>Presentation</h2>
+                <p>
+                    The paper was presented at the Pre-ICLR Poster Session at the ETH AI Center and will be presented at ICLR 2026 in Rio.
+                </p>
+                <p>
+                    <strong>Poster session:</strong><br>
+                    Pavilion 4, P4-#4706<br>
+                    Friday, April 24, 2026<br>
+                    10:30 AM – 1:00 PM
+                </p>
+            </div>
+
+            <div class="b">
+                <h2>Links</h2>
+                <p>
+                    <strong>Paper:</strong>
+                    <a href="https://arxiv.org/abs/2510.24482" target="_blank" rel="noopener noreferrer">arXiv:2510.24482</a>
+                    <br>
+                    <strong>Code:</strong>
+                    <a href="https://github.com/lasgroup/ombrl/" target="_blank" rel="noopener noreferrer">github.com/lasgroup/ombrl</a>
+                    <br>
+                    <strong>Project Website:</strong>
+                    <a href="https://go.klem.nz/combrl" target="_blank" rel="noopener noreferrer">go.klem.nz/combrl</a>
+                </p>
+            </div>
+
         </div>
     </div>
 </body>
