@@ -1,0 +1,257 @@
+/* TacEx — a paper-first research project page. */
+:root {
+  color-scheme: light;
+  --text: #363636;
+  --heading: #292929;
+  --muted: #666666;
+  --link: #216c9c;
+  --rule: #dedede;
+  --code-background: #f6f6f6;
+  --page-width: 960px;
+  --text-width: 760px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: #fff;
+  font: 17px/1.7 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+[hidden] { display: none !important; }
+a { color: var(--link); text-decoration: none; text-underline-offset: .18em; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible, video:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+}
+p { margin: 0 0 1.1rem; }
+h1, h2, h3 { color: var(--heading); }
+h1 {
+  max-width: 900px;
+  margin: 0 auto 1.45rem;
+  font-size: clamp(1.85rem, 4.6vw, 2.85rem);
+  font-weight: 600;
+  line-height: 1.17;
+  letter-spacing: -.022em;
+  text-wrap: balance;
+}
+h1 > span { display: block; }
+h2 {
+  margin: 0 0 1.35rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  text-align: center;
+  text-wrap: balance;
+}
+h3 {
+  margin: 0 0 .9rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+strong { font-weight: 600; }
+sup { font-size: .68em; line-height: 0; vertical-align: super; }
+math { font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", math; }
+.page { width: min(var(--page-width), calc(100% - 48px)); margin-inline: auto; }
+.prose { width: min(100%, var(--text-width)); margin-inline: auto; }
+.prose > :last-child { margin-bottom: 0; }
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 10;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid var(--rule);
+}
+.skip-link:focus { top: 12px; }
+
+/* Title, authors and resources carry the hierarchy; no product navigation. */
+.paper-header { padding: 56px 0 0; text-align: center; }
+.authors { margin: 0 auto .65rem; font-size: 1.03rem; line-height: 1.65; }
+.author-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .1rem 1.35rem; }
+.author-row + .author-row { margin-top: .12rem; }
+.author-row > span { white-space: nowrap; }
+.authors sup { margin-left: .13em; color: var(--text); }
+.affiliations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .2rem 1.6rem;
+  margin-bottom: .1rem;
+  font-size: .91rem;
+}
+.affiliations span { white-space: nowrap; }
+.contribution { margin: .25rem 0 0; color: var(--muted); font-size: .8rem; }
+.resource-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin: 1.25rem 0 1.7rem; }
+.resource-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 40px;
+  padding: .35rem .95rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 4px;
+  color: var(--text);
+  background: #fff;
+  font-size: .88rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.resource-button:hover { border-color: var(--text); background: #fafafa; text-decoration: none; }
+.resource-format { padding-left: .6rem; border-left: 1px solid #ccc; color: var(--muted); font-size: .75rem; }
+.paper-summary { max-width: 740px; margin: 0 auto 1.6rem; font-size: 1.06rem; line-height: 1.6; text-wrap: pretty; }
+
+/* Media remain large; prose and captions use a narrower reading measure. */
+figure { margin: 1.8rem 0 0; }
+img, video, canvas { display: block; max-width: 100%; height: auto; }
+.media-frame { width: 100%; }
+.teaser { max-width: 860px; margin-inline: auto; }
+.teaser video { width: 100%; background: #1c1c1c; border-radius: 2px; }
+figcaption { max-width: 800px; margin: .7rem auto 0; color: var(--muted); font-size: .85rem; line-height: 1.6; text-align: left; }
+figcaption strong { color: #454545; }
+.teaser figcaption { max-width: 760px; }
+.paper-figure img { width: 100%; }
+.figure-link { display: block; }
+.figure-link:hover { opacity: .97; }
+.demo-figure { max-width: 800px; margin-inline: auto; }
+.demo-figure img, .demo-figure canvas { width: 100%; }
+.demo-controls { display: flex; justify-content: flex-end; margin-top: .25rem; }
+.demo-figure figcaption { margin-top: .25rem; }
+.text-button {
+  min-height: 34px;
+  padding: .25rem .45rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--link);
+  font-size: .8rem;
+  line-height: 1.4;
+}
+.text-button:hover { text-decoration: underline; text-underline-offset: .18em; }
+.text-button:disabled { color: var(--muted); text-decoration: none; }
+.media-fallback {
+  display: grid;
+  place-content: center;
+  gap: .15rem;
+  min-height: 150px;
+  padding: 1.6rem;
+  margin: 0;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.noscript-link { margin-top: .5rem; font-size: .85rem; }
+
+/* A small table of contents, then continuous research sections. */
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1.8rem;
+  row-gap: .35rem;
+  margin: 2.2rem auto 0;
+  padding: .75rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-size: .82rem;
+  line-height: 1.6;
+}
+.section-nav a { color: var(--muted); }
+.section-nav a:hover { color: var(--link); }
+.section { padding-top: 3.1rem; }
+.section-intro { color: var(--muted); }
+.method-objective { margin-top: 1.7rem; }
+.equation { max-width: 100%; overflow-x: auto; overflow-y: hidden; margin: .6rem 0 1.3rem; padding: .7rem .15rem; }
+.equation math { width: max-content; min-width: min-content; margin: 0 auto; font-size: 1.12rem; }
+.experiment { margin-top: 2rem; }
+.experiment + .experiment { margin-top: 3rem; }
+.subsection { margin-top: 2.4rem; }
+.results-reference { margin-top: 1.25rem; color: var(--muted); font-size: .87rem; }
+
+/* Citation remains selectable with or without JavaScript. */
+.citation-section { padding-bottom: 1.4rem; }
+.funding-section { padding-bottom: 2rem; }
+.citation-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .85rem; }
+.citation-heading h2 { margin: 0; font-size: 1.45rem; text-align: left; }
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0;
+  padding: 1.15rem 1.25rem;
+  border-radius: 3px;
+  background: var(--code-background);
+  color: var(--text);
+  font: .77rem/1.75 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  tab-size: 2;
+}
+.copy-status { min-height: 1.5em; margin: .5rem 0 0; color: var(--muted); font-size: .8rem; }
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem 1rem;
+  padding: 1.2rem 0 2rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: .78rem;
+}
+.site-footer p { margin: 0; }
+
+@media (max-width: 700px) {
+  body { font-size: 16px; }
+  .page { width: calc(100% - 36px); }
+  .paper-header { padding-top: 36px; }
+  h1 { letter-spacing: -.017em; }
+  h2 { font-size: 1.55rem; }
+  h3 { font-size: 1.15rem; }
+  .authors { font-size: .95rem; }
+  .author-row { gap: .15rem 1rem; }
+  .author-row + .author-row { margin-top: .2rem; }
+  .affiliations { gap: .15rem 1rem; font-size: .83rem; }
+  .paper-summary { font-size: 1rem; }
+  .section-nav { gap: .4rem 1.3rem; margin-top: 1.65rem; }
+  .section { padding-top: 2.5rem; }
+  .equation math { font-size: 1rem; }
+  .experiment + .experiment { margin-top: 2.5rem; }
+  .subsection { margin-top: 2rem; }
+  .resource-links { margin-bottom: 1.4rem; }
+  pre { padding: 1rem; font-size: .73rem; }
+}
+@media (max-width: 400px) {
+  h1 { font-size: 1.7rem; }
+  .authors { font-size: .87rem; }
+  .author-row { gap: .15rem .9rem; }
+  .affiliations { font-size: .78rem; }
+  .section-nav { column-gap: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+@media print {
+  body { font-size: 11pt; }
+  .page { width: 100%; }
+  .paper-header { padding-top: 0; }
+  .skip-link, .section-nav, .demo-controls, #copy-citation, .copy-status, .site-footer, .resource-links { display: none; }
+  .section { padding-top: 1.6rem; }
+  h1 { font-size: 25pt; }
+  h2 { font-size: 17pt; }
+  h3 { font-size: 13pt; }
+  h2, h3 { break-after: avoid; }
+  figure, pre { break-inside: avoid; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  a { color: inherit; }
+}

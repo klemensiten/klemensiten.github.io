@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TacEx studies modality-weighted model disagreement for tactile exploration in robotic manipulation: reward-free data collection, offline learning, and steering frozen VLA policies in simulation.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="Tactile Curiosity Drives Robot Interaction">
+  <meta property="og:description" content="Modality-weighted model disagreement for tactile exploration in robotic manipulation. A simulation study of reward-free exploration and diffusion steering.">
+  <meta property="og:image" content="https://kiten.me/projects/tacex/fig_1.png">
+  <meta property="og:type" content="article">
+  <title>Tactile Curiosity Drives Robot Interaction</title>
+  <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main id="main" class="page">
+    <header class="paper-header" aria-labelledby="paper-title">
+      <h1 id="paper-title"><span>Tactile Curiosity Drives</span> <span>Robot Interaction</span></h1>
+
+      <div class="authors" aria-label="Authors">
+        <div class="author-row">
+          <span><a href="https://kiten.me/" target="_blank" rel="noopener noreferrer">Klemens Iten</a><sup>1,*</sup></span>
+          <span><a href="https://www.proshk.in/" target="_blank" rel="noopener noreferrer">Alex Proshkin</a><sup>2,*</sup></span>
+          <span><a href="https://sukhijab.github.io/" target="_blank" rel="noopener noreferrer">Bhavya Sukhija</a><sup>1,*</sup></span>
+        </div>
+        <div class="author-row">
+          <span><a href="https://crl.ethz.ch/people/coros/index.html" target="_blank" rel="noopener noreferrer">Stelian Coros</a><sup>1</sup></span>
+          <span><a href="https://las.inf.ethz.ch/krausea" target="_blank" rel="noopener noreferrer">Andreas Krause</a><sup>1</sup></span>
+          <span><a href="https://people.eecs.berkeley.edu/~pabbeel/" target="_blank" rel="noopener noreferrer">Pieter Abbeel</a><sup>2</sup></span>
+          <span><a href="https://sferrazza.cc/" target="_blank" rel="noopener noreferrer">Carmelo Sferrazza</a><sup>2</sup></span>
+        </div>
+      </div>
+      <p class="affiliations"><span><sup>1</sup> ETH Zürich</span><span><sup>2</sup> University of California, Berkeley</span></p>
+      <p class="contribution">* Equal contribution</p>
+
+      <div class="resource-links" aria-label="Paper resources">
+        <a class="resource-button" href="https://arxiv.org/pdf/2609.40134" target="_blank" rel="noopener noreferrer">Paper <span class="resource-format">PDF</span></a>
+        <a class="resource-button" href="https://arxiv.org/abs/2609.40134" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <a class="resource-button" href="#citation-title">BibTeX</a>
+        <!-- Add Code / Video links here once their public URLs are available. -->
+      </div>
+
+      <p class="paper-summary">TacEx uses tactile predictive uncertainty to guide exploration in robotic manipulation, from reward-free data collection to steering frozen vision–language–action policies.</p>
+
+      <figure class="teaser" data-media>
+        <div class="media-frame">
+          <video id="teaser-video" controls muted loop playsinline preload="metadata" poster="./teaser-poster.jpg" width="960" height="480" aria-label="Simulated LIBERO rollout showing camera observations and tactile force maps">
+            <source src="./dsrl_tactile.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="./dsrl_tactile.mp4">Open the rollout video.</a>
+          </video>
+          <p class="media-fallback" data-media-fallback hidden>The rollout video is not available in this copy of the page. <a href="https://arxiv.org/html/2609.40134#S4" target="_blank" rel="noopener noreferrer">See the experiments in the paper.</a></p>
+        </div>
+        <figcaption><strong>Diffusion steering in simulation.</strong> A LIBERO rollout with camera observations on the left and tactile force maps on the right. The VLA backbone remains frozen.</figcaption>
+      </figure>
+    </header>
+
+    <section class="section" id="overview" aria-labelledby="overview-title">
+      <div class="prose">
+        <h2 id="overview-title">Overview</h2>
+        <p>Uncertainty-driven exploration can allocate interactions to unpredictable transitions that contribute little to manipulation. We study whether uncertainty over tactile feedback provides a useful inductive bias for collecting contact-rich experience. <strong>TacEx explicitly weights tactile model disagreement</strong> in an exploration objective that separates visual, tactile, and latent-state predictive uncertainty.</p>
+        <p>We evaluate this approach in <strong>two simulation settings</strong>. In reward-free exploration, the agent collects data without task rewards or expert demonstrations. The fixed dataset is then used to train downstream pick-and-place policies offline. In diffusion steering, a lightweight policy learns to select noise inputs for a frozen vision–language–action (VLA) model using task reward and an uncertainty bonus.</p>
+      </div>
+    </section>
+
+    <section class="section" id="method" aria-labelledby="method-title">
+      <div class="prose">
+        <h2 id="method-title">Modality-weighted exploration</h2>
+        <p>TacEx builds on <a href="https://sukhijab.github.io/projects/maxinforl/" target="_blank" rel="noopener noreferrer">MaxInfoRL</a>, replacing an aggregate model-disagreement bonus with separately weighted prediction uncertainties. Separate encoders produce a visual embedding <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>v</mi></math> from RGB images and a tactile embedding <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>ι</mi></math> from spatial force maps. These embeddings, together with a latent robot-state representation <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>z</mi></math>, form the learner state <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>s</mi></math>. An ensemble dynamics model is trained on collected transitions to estimate predictive disagreement for each representation.</p>
+      </div>
+
+      <figure class="paper-figure" data-media>
+        <div class="media-frame">
+          <a class="figure-link" href="./fig_1.png" target="_blank" rel="noopener noreferrer" aria-label="View the method overview at full resolution">
+            <img src="./fig_1.png" alt="TacEx architecture: robot-state and visual representations, together with a tactile embedding, form the learner state. An ensemble predicts the next representations; modality-specific disagreement enters the exploration objective." width="1489" height="626" loading="lazy" decoding="async">
+          </a>
+          <p class="media-fallback" data-media-fallback hidden>The overview figure is not available in this copy of the page. <a href="https://arxiv.org/html/2609.40134" target="_blank" rel="noopener noreferrer">View Figure 1 in the paper.</a></p>
+        </div>
+        <figcaption><strong>Method overview.</strong> The policy collects transitions that train an ensemble dynamics model. Disagreement is estimated separately for visual, tactile, and latent-state predictions and weighted in the exploration bonus.</figcaption>
+      </figure>
+
+      <div class="prose method-objective">
+        <p>The exploration bonus is</p>
+        <div class="equation" tabindex="0" role="region" aria-label="Modality-weighted exploration bonus; scroll horizontally if needed">
+          <math aria-label="b of s and a equals lambda times the sum of visual, tactile, and latent disagreement, each weighted by its modality coefficient" display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow><mi>b</mi><mo>(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo>)</mo><mo>=</mo><mi>λ</mi><mo>(</mo><msub><mi>ω</mi><mi>v</mi></msub><mo fence="true" form="prefix" lspace="0em" rspace="0em" stretchy="true">∥</mo><msubsup><mi>σ</mi><mi>n</mi><mi>v</mi></msubsup><mo>(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo>)</mo><mo fence="true" form="postfix" lspace="0em" rspace="0em" stretchy="true">∥</mo><mo>+</mo><msub><mi>ω</mi><mi>ι</mi></msub><mo fence="true" form="prefix" lspace="0em" rspace="0em" stretchy="true">∥</mo><msubsup><mi>σ</mi><mi>n</mi><mi>ι</mi></msubsup><mo>(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo>)</mo><mo fence="true" form="postfix" lspace="0em" rspace="0em" stretchy="true">∥</mo><mo>+</mo><msub><mi>ω</mi><mi>z</mi></msub><mo fence="true" form="prefix" lspace="0em" rspace="0em" stretchy="true">∥</mo><msubsup><mi>σ</mi><mi>n</mi><mi>z</mi></msubsup><mo>(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo>)</mo><mo fence="true" form="postfix" lspace="0em" rspace="0em" stretchy="true">∥</mo><mo>)</mo><mo>.</mo></mrow>
+</math>
+        </div>
+        <p>The non-negative weights <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>(</mo><msub><mi>ω</mi><mi>v</mi></msub><mo>,</mo><msub><mi>ω</mi><mi>ι</mi></msub><mo>,</mo><msub><mi>ω</mi><mi>z</mi></msub><mo>)</mo></mrow></math> control the contribution of each prediction target. The bonus enters the policy objective alongside task value and action entropy. Changing the weights changes the exploration incentive, not which observations the policy receives. A tactile-only bonus is one configuration, and visual or latent disagreement can provide complementary guidance.</p>
+      </div>
+    </section>
+
+    <section class="section" id="experiments" aria-labelledby="experiments-title">
+      <div class="prose">
+        <h2 id="experiments-title">Experiments</h2>
+      </div>
+
+      <section class="experiment" id="reward-free" aria-labelledby="reward-free-title">
+        <div class="prose">
+          <h3 id="reward-free-title">Reward-free exploration and offline learning</h3>
+          <p>We compare modality-weighted exploration with random action sampling in single- and multi-object scenes. During data collection, the exploration agents receive neither task rewards nor expert demonstrations. Variants with tactile disagreement interact with and attempt to grasp objects more frequently than variants without an explicit tactile prediction target.</p>
+          <p>After exploration, we freeze the replay buffer, relabel the transitions with a pick-and-place reward, and train a soft actor–critic (SAC) policy <strong>entirely offline, with no additional environment interaction</strong>. Data collected with tactile disagreement yields higher downstream returns in these experiments.</p>
+        </div>
+
+        <figure class="paper-figure" data-media>
+          <div class="media-frame">
+            <a class="figure-link" href="./fig_2.png" target="_blank" rel="noopener noreferrer" aria-label="View the single-object results at full resolution">
+              <img src="./fig_2.png" alt="Single-object experiment comparing interaction frequency during reward-free exploration and offline pick-and-place returns. Exploration variants with tactile disagreement show more object interaction and higher downstream returns." width="1812" height="942" loading="lazy" decoding="async">
+            </a>
+            <p class="media-fallback" data-media-fallback hidden>The results figure is not available in this copy of the page. <a href="https://arxiv.org/html/2609.40132#S4" target="_blank" rel="noopener noreferrer">View Figure 2 in the paper.</a></p>
+          </div>
+          <figcaption><strong>Single-object results.</strong> (a) Object-interaction frequency during exploration. (b) Offline pick-and-place return, averaged over the final ten evaluation checkpoints within each seed. DrQ is a separate online baseline trained directly on task reward. Means and standard errors across five seeds.</figcaption>
+        </figure>
+
+        <div class="prose subsection">
+          <h3>Multi-object exploration</h3>
+          <p>In a setting with multiple objects, tactile disagreement encourages contact, while adding visual disagreement broadens the distribution of grasps across objects. Tactile-only exploration gives higher downstream performance on the evaluated pick-and-place task, which targets a single object. Our results illustrate a trade-off between focused contact and interaction diversity.</p>
+        </div>
+
+        <figure class="demo-figure" data-animation-player>
+          <div class="media-frame">
+            <img id="multi-object-demo" class="animated-demo" src="./CoRL%20Video%20SHORTENED%201.gif" data-animation="./CoRL%20Video%20SHORTENED%201.gif" alt="Multi-object exploration rollouts at different stages of training." width="640" height="360" loading="lazy" decoding="async">
+            <p class="media-fallback" data-media-fallback hidden>The animation is not available in this copy of the page.</p>
+          </div>
+          <div class="demo-controls"><button class="text-button animation-toggle" type="button" aria-controls="multi-object-demo" hidden>Pause animation</button></div>
+          <figcaption><strong>Multi-object exploration.</strong> Example rollouts at different stages of training. Quantitative results are reported in Figure 3 of the <a href="https://arxiv.org/html/2609.40134v2#S4" target="_blank" rel="noopener noreferrer">paper</a>.</figcaption>
+          <noscript><p class="noscript-link"><a href="./CoRL%20Video%20SHORTENED%201.gif">View the multi-object animation.</a></p></noscript>
+        </figure>
+      </section>
+
+      <section class="experiment" id="diffusion-steering" aria-labelledby="diffusion-title">
+        <div class="prose">
+          <h3 id="diffusion-title">Diffusion steering of a frozen VLA</h3>
+          <p>A lightweight steering policy learns to select the diffusion noise <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>w</mi><mi>t</mi></msub></math>, which a frozen VLA policy <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>π</mi><mn>0</mn></msub></math> maps to robot actions. The base VLA retains its pretrained visual, proprioceptive, and language inputs. Tactile observations are added to the steering policy and critics; <strong>the VLA backbone is not updated</strong>.</p>
+          <p>We evaluate on eight contact-rich LIBERO-90 tasks, using the same pretrained checkpoint and the same online interaction budget per task across methods. DSRL-SAC learns from sparse task reward without tactile inputs; DSRL-TacEx adds tactile observations and modality-weighted disagreement. Although the VLAs are initially pre-trained without tactile feedback, post-training with TacEx substantially improves downstream performance while remaining highly sample-efficient.</p>
+        </div>
+
+        <figure class="demo-figure" data-animation-player>
+          <div class="media-frame">
+            <img id="dsrl-demo" class="animated-demo" src="./CoRL%20Video%20SHORTENED%202.gif" data-animation="./CoRL%20Video%20SHORTENED%202.gif" alt="Diffusion-steering exploration and task rollouts, with tactile and non-tactile variants." width="640" height="297" loading="lazy" decoding="async">
+            <p class="media-fallback" data-media-fallback hidden>The animation is not available in this copy of the page.</p>
+          </div>
+          <div class="demo-controls"><button class="text-button animation-toggle" type="button" aria-controls="dsrl-demo" hidden>Pause animation</button></div>
+          <figcaption><strong>Diffusion-steering rollouts.</strong> Comparisons with and without tactile feedback. All steering variants keep the base VLA frozen.</figcaption>
+          <noscript><p class="noscript-link"><a href="./CoRL%20Video%20SHORTENED%202.gif">View the diffusion-steering animation.</a></p></noscript>
+        </figure>
+      </section>
+    </section>
+
+    <section class="section citation-section" aria-labelledby="citation-title">
+      <div class="prose">
+        <div class="citation-heading">
+          <h2 id="citation-title">BibTeX</h2>
+          <button id="copy-citation" class="text-button" type="button" hidden>Copy BibTeX</button>
+        </div>
+        <pre id="citation" tabindex="0" aria-label="BibTeX citation"><code>@article{iten2026tactile,
+  title   = {Tactile Curiosity Drives Robot Interaction},
+  author  = {Iten, Klemens and Proshkin, Alex and Sukhija, Bhavya
+             and Coros, Stelian and Krause, Andreas and Abbeel, Pieter
+             and Sferrazza, Carmelo},
+  journal = {arXiv preprint arXiv:2609.40134},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2609.40134}
+}</code></pre>
+        <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="section funding-section" id="funding" aria-labelledby="funding-title">
+      <div class="prose">
+        <h2 id="funding-title">Funding acknowledgments</h2>
+        <p>This research received support from <a href="https://nccr-automation.ch/" target="_blank" rel="noopener noreferrer">NCCR Automation</a>, a National Centre of Competence in Research funded by the <a href="https://www.snf.ch/en" target="_blank" rel="noopener noreferrer">Swiss National Science Foundation</a> (grant 51NF40_225155), from the <a href="https://www.onr.navy.mil/education-outreach/sponsored-research/university-research-initiatives/muri" target="_blank" rel="noopener noreferrer">ONR Multidisciplinary University Research Initiative (MURI)</a> (award N00014-22-1-2773), and from <a href="https://elsa-ai.eu/" target="_blank" rel="noopener noreferrer">ELSA (European Lighthouse on Secure and Safe AI)</a>, funded by the European Union under <a href="https://cordis.europa.eu/project/id/101070617" target="_blank" rel="noopener noreferrer">grant agreement 101070617</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page">
+    <p>TacEx · ETH Zürich &amp; UC Berkeley</p>
+    <a href="../">All projects</a>
+  </footer>
+
+  <!-- Progressive enhancements only. No framework or separate script.js required. -->
+  <script>
+    (() => {
+      'use strict';
+
+      // Missing assets receive an explicit fallback, rather than a broken-image icon.
+      document.querySelectorAll('[data-media]').forEach((figure) => {
+        const media = figure.querySelector('img, video');
+        const fallback = figure.querySelector('[data-media-fallback]');
+        if (!media || !fallback) return;
+        const unavailable = () => {
+          const visual = media.closest('.figure-link') || media;
+          visual.hidden = true;
+          fallback.hidden = false;
+        };
+        const available = () => {
+          const visual = media.closest('.figure-link') || media;
+          visual.hidden = false;
+          fallback.hidden = true;
+        };
+        media.addEventListener('error', unavailable);
+        media.addEventListener(media instanceof HTMLVideoElement ? 'loadedmetadata' : 'load', available);
+        if (media instanceof HTMLImageElement && media.complete && !media.naturalWidth) {
+          unavailable();
+        }
+        if (media instanceof HTMLVideoElement) {
+          media.querySelectorAll('source').forEach((source) => {
+            source.addEventListener('error', unavailable);
+          });
+          if (media.error || media.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+            unavailable();
+          }
+        }
+      });
+
+      // GIFs play by default. Pausing uses an in-memory still, without poster assets.
+      document.querySelectorAll('[data-animation-player]').forEach((figure) => {
+        const image = figure.querySelector('.animated-demo');
+        const button = figure.querySelector('.animation-toggle');
+        const fallback = figure.querySelector('[data-media-fallback]');
+        if (!image || !button || !fallback) return;
+        const frame = document.createElement('canvas');
+        frame.className = 'animation-still';
+        frame.hidden = true;
+        frame.setAttribute('role', 'img');
+        frame.setAttribute('aria-label', image.alt + ' Paused frame.');
+        image.after(frame);
+        let state = 'loading';
+        button.hidden = false;
+        button.disabled = true;
+        button.textContent = 'Loading animation…';
+
+        const showUnavailable = () => {
+          if (state === 'paused') return;
+          state = 'unavailable';
+          image.hidden = true;
+          frame.hidden = true;
+          fallback.hidden = false;
+          fallback.textContent = 'The animation is not available in this copy of the page.';
+          button.textContent = 'Animation unavailable';
+          button.disabled = true;
+        };
+        const showPlaying = () => {
+          if (state !== 'loading') return;
+          state = 'playing';
+          fallback.hidden = true;
+          frame.hidden = true;
+          image.hidden = false;
+          button.disabled = false;
+          button.textContent = 'Pause animation';
+        };
+        const pause = () => {
+          if (state !== 'playing') return;
+          try {
+            frame.width = image.naturalWidth;
+            frame.height = image.naturalHeight;
+            const context = frame.getContext('2d');
+            if (!context) throw new Error('Canvas is unavailable.');
+            context.drawImage(image, 0, 0);
+            frame.hidden = false;
+          } catch (_) {
+            frame.hidden = true;
+            fallback.hidden = false;
+            fallback.textContent = 'Animation paused. Select Play animation to restart.';
+          }
+          state = 'paused';
+          image.hidden = true;
+          image.removeAttribute('src');
+          button.textContent = 'Play animation';
+        };
+        image.addEventListener('error', showUnavailable);
+        image.addEventListener('load', showPlaying);
+        if (image.complete) {
+          if (image.naturalWidth) showPlaying();
+          else showUnavailable();
+        }
+        button.addEventListener('click', () => {
+          if (state === 'playing') {
+            pause();
+          } else {
+            state = 'loading';
+            button.disabled = true;
+            button.textContent = 'Loading animation…';
+            image.src = image.dataset.animation;
+          }
+        });
+      });
+
+      const copyButton = document.getElementById('copy-citation');
+      const citation = document.querySelector('#citation code');
+      const status = document.getElementById('copy-status');
+      if (copyButton && citation && status) {
+        copyButton.hidden = false;
+        copyButton.addEventListener('click', async () => {
+          const text = citation.textContent.trim();
+          let copied = false;
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+              copied = true;
+            }
+          } catch (_) { /* Fall back to selecting and copying the text. */ }
+          if (!copied) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(citation);
+            if (selection) {
+              selection.removeAllRanges();
+              selection.addRange(range);
+              try { copied = document.execCommand('copy'); } catch (_) { /* Keep selected. */ }
+              if (copied) selection.removeAllRanges();
+            }
+          }
+          status.textContent = copied ? 'BibTeX copied.' : 'Select the citation above and copy it with your keyboard.';
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
