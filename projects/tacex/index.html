@@ -23,7 +23,7 @@
       <div class="authors" aria-label="Authors">
         <div class="author-row">
           <span><a href="https://kiten.me/" target="_blank" rel="noopener noreferrer">Klemens Iten</a><sup>1,*</sup></span>
-          <span><a href="https://www.proshk.in/" target="_blank" rel="noopener noreferrer">Alex Proshkin</a><sup>2,*</sup></span>
+          <span><a href="https://www.proshk.in/" target="_blank" rel="noopener noreferrer">Alexander Proshkin</a><sup>2,*</sup></span>
           <span><a href="https://sukhijab.github.io/" target="_blank" rel="noopener noreferrer">Bhavya Sukhija</a><sup>1,*</sup></span>
         </div>
         <div class="author-row">
@@ -36,6 +36,10 @@
       <p class="affiliations"><span><sup>1</sup> ETH Zürich</span><span><sup>2</sup> University of California, Berkeley</span></p>
       <p class="contribution">* Equal contribution</p>
 
+      <p style="margin: 1rem 0 0; font-size: 1.1rem; font-weight: 600;">
+        Meet us at the 10th Conference on Robot Learning (CoRL 2026) from November 9-12 in Austin, Texas! 🤠
+      </p>
+
       <div class="resource-links" aria-label="Paper resources">
         <a class="resource-button" href="https://arxiv.org/pdf/2609.40134" target="_blank" rel="noopener noreferrer">Paper <span class="resource-format">PDF</span></a>
         <a class="resource-button" href="https://arxiv.org/abs/2609.40134" target="_blank" rel="noopener noreferrer">arXiv</a>
@@ -43,7 +47,7 @@
         <!-- Add Code / Video links here once their public URLs are available. -->
       </div>
 
-      <p class="paper-summary">TacEx uses tactile predictive uncertainty to guide exploration in robotic manipulation, from reward-free data collection to steering frozen vision–language–action policies.</p>
+      <p class="paper-summary">TacEx uses <strong>tactile predictive uncertainty</strong> to guide exploration in robotic manipulation, from reward-free data collection to steering frozen vision-language-action policies. In our simulations, this encourages contact-rich interaction and yields experience that can support downstream manipulation learning.</p>
 
       <figure class="teaser" data-media>
         <div class="media-frame">
@@ -60,8 +64,8 @@
     <section class="section" id="overview" aria-labelledby="overview-title">
       <div class="prose">
         <h2 id="overview-title">Overview</h2>
-        <p>Uncertainty-driven exploration can allocate interactions to unpredictable transitions that contribute little to manipulation. We study whether uncertainty over tactile feedback provides a useful inductive bias for collecting contact-rich experience. <strong>TacEx explicitly weights tactile model disagreement</strong> in an exploration objective that separates visual, tactile, and latent-state predictive uncertainty.</p>
-        <p>We evaluate this approach in <strong>two simulation settings</strong>. In reward-free exploration, the agent collects data without task rewards or expert demonstrations. The fixed dataset is then used to train downstream pick-and-place policies offline. In diffusion steering, a lightweight policy learns to select noise inputs for a frozen vision–language–action (VLA) model using task reward and an uncertainty bonus.</p>
+        <p>Random exploration can spend training interactions moving a gripper through free space instead of discovering the contacts that reveal how objects move and can be grasped. Uncertainty-driven exploration can allocate interactions to unpredictable transitions that contribute little to manipulation. We study whether uncertainty over tactile feedback provides a useful inductive bias for collecting contact-rich experience. <strong>TacEx explicitly weights tactile model disagreement</strong> in an exploration objective that separates visual, tactile, and latent-state predictive uncertainty.</p>
+        <p>We evaluate this approach in <strong>two simulation settings</strong>. In reward-free exploration, the agent collects data without task rewards or expert demonstrations. The fixed dataset is then used to train downstream pick-and-place policies offline. In diffusion steering, a lightweight policy learns to select noise inputs for a frozen vision-language-action (VLA) model using task reward and an uncertainty bonus.</p>
       </div>
     </section>
 
@@ -101,7 +105,7 @@
         <div class="prose">
           <h3 id="reward-free-title">Reward-free exploration and offline learning</h3>
           <p>We compare modality-weighted exploration with random action sampling in single- and multi-object scenes. During data collection, the exploration agents receive neither task rewards nor expert demonstrations. Variants with tactile disagreement interact with and attempt to grasp objects more frequently than variants without an explicit tactile prediction target.</p>
-          <p>After exploration, we freeze the replay buffer, relabel the transitions with a pick-and-place reward, and train a soft actor–critic (SAC) policy <strong>entirely offline, with no additional environment interaction</strong>. Data collected with tactile disagreement yields higher downstream returns in these experiments.</p>
+          <p>After exploration, we freeze the replay buffer, relabel the transitions with a pick-and-place reward, and train a soft actor-critic (SAC) policy <strong>entirely offline, with no additional environment interaction</strong>. Data collected with tactile disagreement yields higher downstream returns in these experiments.</p>
         </div>
 
         <figure class="paper-figure" data-media>
@@ -149,6 +153,24 @@
       </section>
     </section>
 
+<section class="section" id="conclusion" aria-labelledby="conclusion-title">
+  <div class="prose">
+    <h2 id="conclusion-title">Conclusion</h2>
+    <p>
+      TacEx biases exploration toward tactile predictive uncertainty.
+      In our simulations, this encourages contact-rich interaction and
+      yields experience that supports downstream manipulation learning.
+      Data collected without task rewards can be used to train a
+      pick-and-place policy offline, without further environment
+      interaction. Tactile uncertainty also guides exploration when
+      steering a frozen vision-language-action policy, improving learning
+      on several contact-rich tasks. Our results suggest that distinguishing between sensory modalities
+      can help direct exploration toward interactions relevant to
+      manipulation.
+    </p>
+  </div>
+</section>
+
     <section class="section citation-section" aria-labelledby="citation-title">
       <div class="prose">
         <div class="citation-heading">
@@ -178,7 +200,10 @@
 
   <footer class="site-footer page">
     <p>TacEx · ETH Zürich &amp; UC Berkeley</p>
-    <a href="../">All projects</a>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="../../">Home</a>
+      <a href="../">All projects</a>
+    </nav>
   </footer>
 
   <!-- Progressive enhancements only. No framework or separate script.js required. -->
