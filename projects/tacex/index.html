@@ -43,8 +43,9 @@
       <div class="resource-links" aria-label="Paper resources">
         <a class="resource-button" href="https://arxiv.org/pdf/2609.40134" target="_blank" rel="noopener noreferrer">Paper <span class="resource-format">PDF</span></a>
         <a class="resource-button" href="https://arxiv.org/abs/2609.40134" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <a class="resource-button" href="https://youtu.be/IkMvuaCo5qw" target="_blank" rel="noopener noreferrer">Video</a>
         <a class="resource-button" href="#citation-title">BibTeX</a>
-        <!-- Add Code / Video links here once their public URLs are available. -->
+        <!-- Add the Code link here once its public URL is available. -->
       </div>
 
       <p class="paper-summary">TacEx uses <strong>tactile predictive uncertainty</strong> to guide exploration in robotic manipulation, from reward-free data collection to steering frozen vision-language-action policies. In our simulations, this encourages contact-rich interaction and yields experience that can support downstream manipulation learning.</p>
@@ -125,8 +126,11 @@
 
         <figure class="demo-figure" data-animation-player>
           <div class="media-frame">
-            <img id="multi-object-demo" class="animated-demo" src="./CoRL%20Video%20SHORTENED%201.gif" data-animation="./CoRL%20Video%20SHORTENED%201.gif" alt="Multi-object exploration rollouts at different stages of training." width="640" height="360" loading="lazy" decoding="async">
-            <p class="media-fallback" data-media-fallback hidden>The animation is not available in this copy of the page.</p>
+            <video id="multi-object-demo" class="animated-demo" autoplay muted loop playsinline controls preload="metadata" width="640" height="360" aria-label="Multi-object exploration rollouts at different stages of training.">
+              <source src="./multi-object-demo.mp4" type="video/mp4">
+              Your browser does not support this video. <a href="./CoRL%20Video%20SHORTENED%201.gif">View the original animation.</a>
+            </video>
+            <p class="media-fallback" data-media-fallback hidden>The video is not available in this copy of the page. <a href="./CoRL%20Video%20SHORTENED%201.gif">View the original GIF.</a></p>
           </div>
           <div class="demo-controls"><button class="text-button animation-toggle" type="button" aria-controls="multi-object-demo" hidden>Pause animation</button></div>
           <figcaption><strong>Multi-object exploration.</strong> Example rollouts at different stages of training. Quantitative results are reported in Figure 3 of the <a href="https://arxiv.org/html/2609.40134v2#S4" target="_blank" rel="noopener noreferrer">paper</a>.</figcaption>
@@ -143,8 +147,11 @@
 
         <figure class="demo-figure" data-animation-player>
           <div class="media-frame">
-            <img id="dsrl-demo" class="animated-demo" src="./CoRL%20Video%20SHORTENED%202.gif" data-animation="./CoRL%20Video%20SHORTENED%202.gif" alt="Diffusion-steering exploration and task rollouts, with tactile and non-tactile variants." width="640" height="297" loading="lazy" decoding="async">
-            <p class="media-fallback" data-media-fallback hidden>The animation is not available in this copy of the page.</p>
+            <video id="dsrl-demo" class="animated-demo" autoplay muted loop playsinline controls preload="metadata" width="640" height="298" aria-label="Diffusion-steering exploration and task rollouts, with tactile and non-tactile variants.">
+              <source src="./dsrl-demo.mp4" type="video/mp4">
+              Your browser does not support this video. <a href="./CoRL%20Video%20SHORTENED%202.gif">View the original animation.</a>
+            </video>
+            <p class="media-fallback" data-media-fallback hidden>The video is not available in this copy of the page. <a href="./CoRL%20Video%20SHORTENED%202.gif">View the original GIF.</a></p>
           </div>
           <div class="demo-controls"><button class="text-button animation-toggle" type="button" aria-controls="dsrl-demo" hidden>Pause animation</button></div>
           <figcaption><strong>Diffusion-steering rollouts.</strong> Comparisons with and without tactile feedback. All steering variants keep the base VLA frozen.</figcaption>
@@ -241,77 +248,46 @@
         }
       });
 
-      // GIFs play by default. Pausing uses an in-memory still, without poster assets.
+      // Native video playback preserves the displayed frame and playback position.
       document.querySelectorAll('[data-animation-player]').forEach((figure) => {
-        const image = figure.querySelector('.animated-demo');
+        const video = figure.querySelector('video.animated-demo');
         const button = figure.querySelector('.animation-toggle');
         const fallback = figure.querySelector('[data-media-fallback]');
-        if (!image || !button || !fallback) return;
-        const frame = document.createElement('canvas');
-        frame.className = 'animation-still';
-        frame.hidden = true;
-        frame.setAttribute('role', 'img');
-        frame.setAttribute('aria-label', image.alt + ' Paused frame.');
-        image.after(frame);
-        let state = 'loading';
-        button.hidden = false;
-        button.disabled = true;
-        button.textContent = 'Loading animation…';
+        if (!video || !button || !fallback) return;
 
-        const showUnavailable = () => {
-          if (state === 'paused') return;
-          state = 'unavailable';
-          image.hidden = true;
-          frame.hidden = true;
+        const updateButton = () => {
+          button.textContent = video.paused ? 'Play animation' : 'Pause animation';
+        };
+        const unavailable = () => {
+          video.hidden = true;
           fallback.hidden = false;
-          fallback.textContent = 'The animation is not available in this copy of the page.';
-          button.textContent = 'Animation unavailable';
-          button.disabled = true;
+          button.hidden = true;
         };
-        const showPlaying = () => {
-          if (state !== 'loading') return;
-          state = 'playing';
-          fallback.hidden = true;
-          frame.hidden = true;
-          image.hidden = false;
-          button.disabled = false;
-          button.textContent = 'Pause animation';
+        const play = () => {
+          // This also runs directly from the click handler, preserving mobile user activation.
+          const playback = video.play();
+          if (playback) playback.catch(updateButton);
         };
-        const pause = () => {
-          if (state !== 'playing') return;
-          try {
-            frame.width = image.naturalWidth;
-            frame.height = image.naturalHeight;
-            const context = frame.getContext('2d');
-            if (!context) throw new Error('Canvas is unavailable.');
-            context.drawImage(image, 0, 0);
-            frame.hidden = false;
-          } catch (_) {
-            frame.hidden = true;
-            fallback.hidden = false;
-            fallback.textContent = 'Animation paused. Select Play animation to restart.';
-          }
-          state = 'paused';
-          image.hidden = true;
-          image.removeAttribute('src');
-          button.textContent = 'Play animation';
-        };
-        image.addEventListener('error', showUnavailable);
-        image.addEventListener('load', showPlaying);
-        if (image.complete) {
-          if (image.naturalWidth) showPlaying();
-          else showUnavailable();
-        }
-        button.addEventListener('click', () => {
-          if (state === 'playing') {
-            pause();
-          } else {
-            state = 'loading';
-            button.disabled = true;
-            button.textContent = 'Loading animation…';
-            image.src = image.dataset.animation;
-          }
+
+        video.muted = true;
+        button.hidden = false;
+        video.addEventListener('play', updateButton);
+        video.addEventListener('pause', updateButton);
+        video.addEventListener('ended', updateButton);
+        video.addEventListener('error', unavailable);
+        video.querySelectorAll('source').forEach((source) => {
+          source.addEventListener('error', unavailable);
         });
+        button.addEventListener('click', () => {
+          if (video.paused) play();
+          else video.pause();
+        });
+        updateButton();
+        if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+          unavailable();
+        } else {
+          play();
+        }
       });
 
       const copyButton = document.getElementById('copy-citation');

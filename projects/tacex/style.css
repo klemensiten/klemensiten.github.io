@@ -125,7 +125,7 @@ figcaption strong { color: #454545; }
 .figure-link { display: block; }
 .figure-link:hover { opacity: .97; }
 .demo-figure { max-width: 800px; margin-inline: auto; }
-.demo-figure img, .demo-figure canvas { width: 100%; }
+.demo-figure img, .demo-figure video { width: 100%; }
 .demo-controls { display: flex; justify-content: flex-end; margin-top: .25rem; }
 .demo-figure figcaption { margin-top: .25rem; }
 .text-button {
@@ -140,6 +140,7 @@ figcaption strong { color: #454545; }
 }
 .text-button:hover { text-decoration: underline; text-underline-offset: .18em; }
 .text-button:disabled { color: var(--muted); text-decoration: none; }
+.animation-toggle { min-height: 44px; min-width: 44px; touch-action: manipulation; }
 .media-fallback {
   display: grid;
   place-content: center;
